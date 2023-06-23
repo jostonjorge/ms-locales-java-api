@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+  mongo:
+    container_name: mongodb
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: replace_with_your_root_username
+      MONGO_INITDB_ROOT_PASSWORD: replace_with_your_root_password
+      MONGO_INITDB_DATABASE: locales
+    ports:
+      - "27017:27017"
+    networks:
+      - app-mslocales-network
+  java-api:
+    container_name: java-api-ms-locales
+    build:
+      context: .
+      dockerfile: backend.DockerFile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    networks:
+      - app-mslocales-network
+networks:
+  app-mslocales-network:
+    driver: bridge
